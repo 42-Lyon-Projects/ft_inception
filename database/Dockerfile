@@ -18,18 +18,15 @@ EXPOSE 3306
 
 #RUN echo "bind-address = 0.0.0.0" >> /etc/mysql/my.cnf
 
-# Create a volume for the MySQL data
-#VOLUME /var/lib/mysql
-
 # Create a database and user
 RUN service mariadb start && mariadb -u root                                                      \
     -e "CREATE DATABASE IF NOT EXISTS wordpress_db;"                                              \
-    -e "CREATE USER IF NOT EXISTS '${DATABASE_USER}' IDENTIFIED BY '${DATABASE_USER_PASSWORD}';"  \
-    -e "GRANT ALL PRIVILEGES ON *.* TO '${DATABASE_USER}'@'%';"                                   \
+    -e "CREATE USER IF NOT EXISTS 'test' IDENTIFIED BY 'test';"  \
+    -e "GRANT ALL PRIVILEGES ON wordpress_db.* TO 'test';"                                   \
     -e "FLUSH PRIVILEGES;"
 
 # Set the user and group to run the MySQL Server
-USER mysql:mysql
+# USER mysql:mysql
 
 # Set the default command to run when a container starts
 CMD ["mariadbd", "--bind-address=0.0.0.0"]

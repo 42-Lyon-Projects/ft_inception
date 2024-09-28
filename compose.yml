@@ -1,12 +1,10 @@
-version: "3.8"
-
 services:
   inception-mariadb:
     container_name: inception-mariadb
-    image: inception_mysql:1.0
+    image: inception_mariadb:1.0
     restart: on-failure
-    port:
-      - "3306:3306"
+    expose:
+      - "3306"
     env_file:
       - .env
     build:
@@ -15,7 +13,7 @@ services:
     volumes:
       - inception-mariadb:/var/lib/mysql
     networks:
-      - inception-back
+      - inception
   inception-nginx:
     container_name: inception-nginx
     image: inception_nginx:1.0
@@ -23,13 +21,13 @@ services:
     volumes:
       - inception-nginx:/var/www/jbadaire.42.fr
     networks:
-      - inception-front
+      - inception
     ports:
       - "443:443"
     expose:
       - "443"
     depends_on:
-      - mariadb
+      - inception-mariadb
     env_file:
       - .env
     build:
@@ -40,13 +38,13 @@ services:
     image: inception-wordpress:1.0
     restart: always
     depends_on:
-      - nginx
+      - inception-nginx
     env_file:
       - .env
     volumes:
       - inception-nginx:/var/www/jbadaire.42.fr
     networks:
-      - inception-front
+      - inception
     expose:
       - "9000"
     build:
@@ -60,19 +58,16 @@ volumes:
     driver_opts:
       type: none
       o: bind
-      device: /home/jimmy/inception/data/nginx
+      device: /home/jbadaire/data/nginx
   inception-mariadb:
     name: inception-mariadb
     driver: local
     driver_opts:
       type: none
       o: bind
-      device: /home/jimmy/inception/data/mariadb
+      device: /home/jbadaire/data/mariadb
 
 networks:
-  back-end:
+  inception:
     name: inception-back
-    driver: bridge
-  front-end:
-    name: inception-front
     driver: bridge

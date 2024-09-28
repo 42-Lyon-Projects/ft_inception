@@ -11,8 +11,8 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 # Update the package repository and upgrade the system
 RUN apt-get update -y && apt-get upgrade -y \
-    && apt install -y php7.4-mysql          \
-                    php7.4-fpm              \
+    && apt install -y php-mysql          \
+                    php-fpm              \
                     wget
 
 # Download the Wordpress installer

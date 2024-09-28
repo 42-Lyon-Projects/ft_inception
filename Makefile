@@ -1,4 +1,4 @@
-VOLUME_DATA="/home/jimmy/inception/data/"
+VOLUME_DATA=/home/jbadaire/data
 COMPOSE_PATH="compose.yml"
 
 all:
@@ -13,7 +13,7 @@ clean:
 
 fclean: clean
 	docker system prune --all --force
-	sudo rm -rf $(VOLUME_DATA)
+	rm -rf $(VOLUME_DATA)
 
 re: fclean all
 

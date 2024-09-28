@@ -28,7 +28,7 @@ RUN mkdir -p /home/nginx #&& chown -R nginx:nginx /home/nginx
 #USER nginx
 
 # Generate a self-signed certificate
-RUN openssl req -x509 -nodes -days 365 -keyout /etc/nginx/ssl/jbadaire.42.fr.key -out /etc/nginx/ssl/jbadaire.42.fr.crt -subj "/C=FR/ST=Paris/L=Paris/O=42/OU=jbadaire/CN=jbadaire.42.fr/UID=nginx"
+RUN openssl req -x509 -nodes -days 365 -keyout /etc/nginx/ssl/jbadaire.42.fr.key -out /etc/nginx/ssl/jbadaire.42.fr.crt -subj "/C=FR/ST=Paris/L=Lyon/O=42/OU=42/CN=jbadaire.42.fr/UID=jbadaire"
 
 #Expose the nginx port to the host for some tests
 #EXPOSE 80
