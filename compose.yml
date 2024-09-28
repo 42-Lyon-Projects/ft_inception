@@ -1,0 +1,78 @@
+version: "3.8"
+
+services:
+  inception-mariadb:
+    container_name: inception-mariadb
+    image: inception_mysql:1.0
+    restart: on-failure
+    port:
+      - "3306:3306"
+    env_file:
+      - .env
+    build:
+      context: ./database/
+      dockerfile: Dockerfile
+    volumes:
+      - inception-mariadb:/var/lib/mysql
+    networks:
+      - inception-back
+  inception-nginx:
+    container_name: inception-nginx
+    image: inception_nginx:1.0
+    restart: on-failure
+    volumes:
+      - inception-nginx:/var/www/jbadaire.42.fr
+    networks:
+      - inception-front
+    ports:
+      - "443:443"
+    expose:
+      - "443"
+    depends_on:
+      - mariadb
+    env_file:
+      - .env
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+  inception-wordpress:
+    container_name: inception-wordpress
+    image: inception-wordpress:1.0
+    restart: always
+    depends_on:
+      - nginx
+    env_file:
+      - .env
+    volumes:
+      - inception-nginx:/var/www/jbadaire.42.fr
+    networks:
+      - inception-front
+    expose:
+      - "9000"
+    build:
+      context: ./wordpress
+      dockerfile: Dockerfile
+
+volumes:
+  inception-nginx:
+    name: inception-nginx
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/jimmy/inception/data/nginx
+  inception-mariadb:
+    name: inception-mariadb
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/jimmy/inception/data/mariadb
+
+networks:
+  back-end:
+    name: inception-back
+    driver: bridge
+  front-end:
+    name: inception-front
+    driver: bridge
