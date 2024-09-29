@@ -1,5 +1,5 @@
 VOLUME_DATA=/home/jbadaire/data
-COMPOSE_PATH="compose.yml"
+COMPOSE_PATH="./srcs/docker-compose.yml"
 
 all:
 	mkdir -p $(VOLUME_DATA)/nginx $(VOLUME_DATA)/mariadb
@@ -13,7 +13,7 @@ clean:
 
 fclean: clean
 	docker system prune --all --force
-	rm -rf $(VOLUME_DATA)
+	sudo rm -rf $(VOLUME_DATA)
 
 re: fclean all
 

@@ -8,7 +8,12 @@ services:
     env_file:
       - .env
     build:
-      context: ./database/
+      context: ./requirements/mariadb/
+      args:
+        - DATABASE_NAME
+        - DATABASE_USER
+        - DATABASE_USER_PASSWORD
+        - DATABASE_ROOT_PASSWORD
       dockerfile: Dockerfile
     volumes:
       - inception-mariadb:/var/lib/mysql
@@ -17,7 +22,7 @@ services:
   inception-nginx:
     container_name: inception-nginx
     image: inception_nginx:1.0
-    restart: on-failure
+    restart: always
     volumes:
       - inception-nginx:/var/www/jbadaire.42.fr
     networks:
@@ -28,17 +33,18 @@ services:
       - "443"
     depends_on:
       - inception-mariadb
+      - inception-wordpress
     env_file:
       - .env
     build:
-      context: ./nginx
+      context: ./requirements/nginx
       dockerfile: Dockerfile
   inception-wordpress:
     container_name: inception-wordpress
     image: inception-wordpress:1.0
     restart: always
     depends_on:
-      - inception-nginx
+      - inception-mariadb
     env_file:
       - .env
     volumes:
@@ -48,7 +54,7 @@ services:
     expose:
       - "9000"
     build:
-      context: ./wordpress
+      context: ./requirements/wordpress
       dockerfile: Dockerfile
 
 volumes:
@@ -69,5 +75,5 @@ volumes:
 
 networks:
   inception:
-    name: inception-back
+    name: inception
     driver: bridge

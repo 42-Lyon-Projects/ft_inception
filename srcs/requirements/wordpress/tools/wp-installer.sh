@@ -6,9 +6,9 @@ if [ ! -f /var/www/jbadaire.42.fr/wp-config.php ]; then
 	wp-cli.phar core download --allow-root --path=/var/www/jbadaire.42.fr
 
 
-	wp-cli.phar config create --allow-root --dbname="wordpress_db" \
-	                          --dbuser="test" \
-	                          --dbpass="test" \
+	wp-cli.phar config create --allow-root --dbname="${DATABASE_NAME}" \
+	                          --dbuser="${DATABASE_USER}" \
+	                          --dbpass="${DATABASE_USER_PASSWORD}" \
 	                          --dbhost=inception-mariadb \
 	                          --path=/var/www/jbadaire.42.fr
 
@@ -26,5 +26,4 @@ if [ ! -f /var/www/jbadaire.42.fr/wp-config.php ]; then
 fi
 
 mkdir -p /run/php
-chown -R www-data:www-data var/www/jbadaire.42.fr
 php-fpm7.4 -F
